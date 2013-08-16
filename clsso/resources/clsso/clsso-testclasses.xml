@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<testclasses>
+  <clsso>
+    <testclass>com.cl.sso.ws.CLWebServiceTest</testclass>
+    <testclass>com.cl.sso.jalo.ClssoTest</testclass>
+  </clsso>
+</testclasses>
