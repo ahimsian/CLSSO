@@ -9,9 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.authentication.RememberMeServices;
 
 import com.cl.sso.tokens.CLSSOAuthenticationToken;
 
@@ -22,6 +25,12 @@ public class CLSSOAuthenticationFilter extends AbstractAuthenticationProcessingF
 	private static final Logger LOG = Logger.getLogger(CLSSOAuthenticationFilter.class.getName());
 
 	private static final String CLSSOURL = Config.getString("CLSSO_URL", "");
+
+	public static final String SECURE_GUID_SESSION_KEY = "acceleratorSecureGUID";
+
+	private AuthenticationManager authenticationManager;
+	//private GUIDCookieStrategy guidCookieStrategy;
+	private RememberMeServices rememberMeServices;
 
 	protected CLSSOAuthenticationFilter()
 	{
@@ -38,9 +47,23 @@ public class CLSSOAuthenticationFilter extends AbstractAuthenticationProcessingF
 
 		final boolean success = true;
 		//final boolean success = Boolean.parseBoolean(successStr);
-		final CLSSOAuthenticationToken authRequest = new CLSSOAuthenticationToken(username, success);
+		final CLSSOAuthenticationToken token = new CLSSOAuthenticationToken(username, success);
 
-		return this.getAuthenticationManager().authenticate(authRequest);
+		final Authentication authentication = getAuthenticationManager().authenticate(token);
+
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		getRememberMeServices().loginSuccess(request, response, token);
+
+		return authentication;
+
+		/*
+		 * final Authentication authentication = getAuthenticationManager().authenticate(authRequest);
+		 * SecurityContextHolder.getContext().setAuthentication(authentication); getCustomerFacade().loginSuccess();
+		 * getGuidCookieStrategy().setCookie(request, response); getRememberMeServices().loginSuccess(request, response,
+		 * token);
+		 * 
+		 * return authentication;
+		 */
 	}
 
 	// Hack to always require authentication
