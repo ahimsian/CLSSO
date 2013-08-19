@@ -9,7 +9,9 @@ import com.thomsonlearning.ws._80.ssows.SSOwsPort;
 import com.tl.ssows.ws.AddUserParameters;
 import com.tl.ssows.ws.GetTokenParameters;
 import com.tl.ssows.ws.GetUserParameters;
+import com.tl.ssows.ws.ModifyUserParameters;
 import com.tl.ssows.ws.SSOwsResult;
+import com.tl.ssows.ws.TLPerson;
 
 
 /**
@@ -99,5 +101,28 @@ public class CLWebServiceImpl implements CLWebService
 		param.setReturnGroups(returnGroups);
 
 		return service.getSSOwsPort().getUser(param);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.cl.sso.ws.CLWebService#modifyEmail(java.lang.String, com.cl.sso.ws.impl.CLPerson, java.lang.String)
+	 */
+	@Override
+	public SSOwsResult modifyEmail(final String token, final String personUid, final String newEmail)
+	{
+		final TLPerson person = getUser(token, null, personUid, null).getUsers().getTLPerson().get(0);
+
+		final ModifyUserParameters param = new ModifyUserParameters();
+		param.setGuid(person.getGuid());
+		param.setUid(person.getUid());
+		param.setToken(token);
+
+		// modify user email before adding
+		person.setUid(newEmail);
+
+		param.setPerson(person);
+
+		return service.getSSOwsPort().modifyUser(param);
 	}
 }

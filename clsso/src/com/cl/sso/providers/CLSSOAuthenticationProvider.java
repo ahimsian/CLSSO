@@ -146,9 +146,15 @@ public class CLSSOAuthenticationProvider implements AuthenticationProvider, Init
 			}
 
 			final TLPerson person = result.getUsers().getTLPerson().get(0);
-			userDetails.setUserType(person.getUid());
-			userDetails.setUserPassword(person.getUid());
+			userDetails.setUserType(person.getUserType());
+			userDetails.setUserPassword(person.getUserPassword());
 			userDetails.setUid(person.getUid());
+			userDetails.setGivenName(person.getGivenName());
+			userDetails.setSn(person.getSn());
+			userDetails.setGuid(person.getGuid());
+			userDetails.setC(person.getC());
+			userDetails.setCn(person.getCn());
+			userDetails.setDn(person.getDn());
 
 			//userDetails.getAuthorities().clear();
 			//userDetails.getAuthorities().add(new GrantedAuthorityImpl(""));
