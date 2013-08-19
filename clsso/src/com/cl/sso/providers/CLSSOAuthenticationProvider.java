@@ -83,8 +83,15 @@ public class CLSSOAuthenticationProvider implements AuthenticationProvider, Init
 				throw userNotFound;
 			}
 
-			// TODO:
-			preAuthenticationCheks.check(userDetails);
+			// TODO: disabledException being thrown...
+			try
+			{
+				preAuthenticationCheks.check(userDetails);
+			}
+			catch (final Exception e)
+			{
+				System.out.println(e.getMessage());
+			}
 
 			final de.hybris.platform.jalo.user.User user = UserManager.getInstance().getUserByLogin(uid);
 			JaloSession.getCurrentSession().setUser(user);
@@ -141,6 +148,10 @@ public class CLSSOAuthenticationProvider implements AuthenticationProvider, Init
 			final TLPerson person = result.getUsers().getTLPerson().get(0);
 			userDetails.setUserType(person.getUid());
 			userDetails.setUserPassword(person.getUid());
+			userDetails.setUid(person.getUid());
+
+			//userDetails.getAuthorities().clear();
+			//userDetails.getAuthorities().add(new GrantedAuthorityImpl(""));
 
 		}
 		catch (final UsernameNotFoundException userNotFound)
@@ -182,6 +193,7 @@ public class CLSSOAuthenticationProvider implements AuthenticationProvider, Init
 	{
 		return (RememberMeAuthenticationToken.class.isAssignableFrom(authentication))
 				|| (CLSSOAuthenticationToken.class.isAssignableFrom(authentication));
+		//|| (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication)));
 	}
 
 	public void setSessionProxy(final SessionProxy sessionProxy)

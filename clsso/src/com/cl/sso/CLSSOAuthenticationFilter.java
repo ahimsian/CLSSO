@@ -34,7 +34,6 @@ public class CLSSOAuthenticationFilter extends AbstractAuthenticationProcessingF
 	{
 		// j_username is html attribute
 		final String username = request.getParameter("j_username");
-		final String successStr = request.getParameter("success");
 		LOG.info("CLSSOAuthenticaionFilter j_username = " + username);
 
 		final boolean success = true;

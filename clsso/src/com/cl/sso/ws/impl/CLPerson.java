@@ -3,9 +3,11 @@
  */
 package com.cl.sso.ws.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.tl.ssows.ws.TLPerson;
@@ -26,8 +28,10 @@ public class CLPerson extends TLPerson implements UserDetails
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities()
 	{
-		// YTODO Auto-generated method stub
-		return null;
+		// TODO: quick hack for authority
+		final Collection<GrantedAuthorityImpl> auth = new ArrayList<GrantedAuthorityImpl>();
+		auth.add(new GrantedAuthorityImpl("ROLE_CUSTOMERGROUP"));
+		return auth;
 	}
 
 	/*
@@ -39,7 +43,7 @@ public class CLPerson extends TLPerson implements UserDetails
 	public String getPassword()
 	{
 		// YTODO Auto-generated method stub
-		return null;
+		return userPassword;
 	}
 
 	/*
@@ -51,7 +55,7 @@ public class CLPerson extends TLPerson implements UserDetails
 	public String getUsername()
 	{
 		// YTODO Auto-generated method stub
-		return null;
+		return uid;
 	}
 
 	/*
@@ -99,7 +103,7 @@ public class CLPerson extends TLPerson implements UserDetails
 	public boolean isEnabled()
 	{
 		// YTODO Auto-generated method stub
-		return false;
+		return (uid != null);
 	}
 	//TODO: extend TLPerson
 }

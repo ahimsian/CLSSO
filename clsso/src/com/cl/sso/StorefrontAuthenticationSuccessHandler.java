@@ -28,15 +28,25 @@ public class StorefrontAuthenticationSuccessHandler extends SimpleUrlAuthenticat
 	{
 		/**
 		 * Securities Last login Implementation.
-		 *
+		 * 
 		 * **/
 		final String username = authentication.getName();
-		final User user = UserManager.getInstance().getUserByLogin(username);
-		final UserModel userModel = getModelService().get(user);
-		userModel.setLastLogin(new Date());
-		getModelService().save(userModel);
+		try
+		{
+			final User user = UserManager.getInstance().getUserByLogin(username);
+			final UserModel userModel = getModelService().get(user);
+			userModel.setLastLogin(new Date());
+			getModelService().save(userModel);
 
-		response.sendRedirect(request.getContextPath() + "/index.zul");
+			// response.sendRedirect(request.getContextPath() + "/index.zul");
+			response.sendRedirect(request.getContextPath());
+		}
+		catch (final Exception e)
+		{
+			System.out.println(e.getMessage());
+			response.sendRedirect(request.getContextPath());
+		}
+
 	}
 
 	private ModelService getModelService()
