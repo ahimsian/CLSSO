@@ -63,5 +63,5 @@ public interface CLWebService
 	 */
 	public SSOwsResult getUser(String token, String guid, String uid, String returnGroups);
 
-	public SSOwsResult modifyEmail(String token, String personUid, String newEmail);
+	public SSOwsResult modifyName(String token, String personUid, String fName, String lName);
 }

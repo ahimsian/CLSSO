@@ -2,6 +2,7 @@ package com.cl.sso.providers;
 
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.jalo.JaloConnection;
+import de.hybris.platform.jalo.JaloItemNotFoundException;
 import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.jalo.user.UserManager;
 
@@ -66,7 +67,7 @@ public class CLSSOAuthenticationProvider implements AuthenticationProvider, Init
 		}
 		if (Registry.hasCurrentTenant() && JaloConnection.getInstance().isSystemInitialized())
 		{
-			UserDetails userDetails = null;
+			CLPerson userDetails = null;
 			try
 			{
 				userDetails = getUserDetails(uid);
@@ -93,8 +94,25 @@ public class CLSSOAuthenticationProvider implements AuthenticationProvider, Init
 				System.out.println(e.getMessage());
 			}
 
-			final de.hybris.platform.jalo.user.User user = UserManager.getInstance().getUserByLogin(uid);
-			JaloSession.getCurrentSession().setUser(user);
+			if (uid == null)
+			{
+				return createFailureAuthentication(authentication);
+			}
+			try
+			{
+				final de.hybris.platform.jalo.user.User user = UserManager.getInstance().getUserByLogin(uid);
+				//user.setUID(userDetails.getUid());
+				user.setName(userDetails.getGivenName() + " " + userDetails.getSn());
+
+				JaloSession.getCurrentSession().setUser(user);
+				//JaloSession.getCurrentSession().setUser(userDetails);
+			}
+			catch (final JaloItemNotFoundException e)
+			{
+				System.out.println(e.getMessage());
+				return createFailureAuthentication(authentication);
+			}
+
 			return createSuccessAuthentication(authentication, userDetails);
 		}
 
@@ -130,7 +148,7 @@ public class CLSSOAuthenticationProvider implements AuthenticationProvider, Init
 		return result;
 	}
 
-	protected final UserDetails getUserDetails(final String username) throws AuthenticationException
+	protected final CLPerson getUserDetails(final String username) throws AuthenticationException
 	{
 		final CLPerson userDetails = new CLPerson();
 		try

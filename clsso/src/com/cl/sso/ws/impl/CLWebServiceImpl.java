@@ -109,7 +109,7 @@ public class CLWebServiceImpl implements CLWebService
 	 * @see com.cl.sso.ws.CLWebService#modifyEmail(java.lang.String, com.cl.sso.ws.impl.CLPerson, java.lang.String)
 	 */
 	@Override
-	public SSOwsResult modifyEmail(final String token, final String personUid, final String newEmail)
+	public SSOwsResult modifyName(final String token, final String personUid, final String fName, final String lName)
 	{
 		final TLPerson person = getUser(token, null, personUid, null).getUsers().getTLPerson().get(0);
 
@@ -119,7 +119,8 @@ public class CLWebServiceImpl implements CLWebService
 		param.setToken(token);
 
 		// modify user email before adding
-		person.setUid(newEmail);
+		person.setGivenName(fName);
+		person.setSn(lName);
 
 		param.setPerson(person);
 
